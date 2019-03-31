@@ -20,6 +20,9 @@ service: twitter-bot # NOTE: update this with your service name
 provider:
   name: aws
   runtime: python3.7
+  versionFunctions: false # We don't need versioning because we are using Git
+  memorySize: 128
+  region: us-west-2
 
 # you can overwrite defaults here
 #  stage: dev
@@ -46,17 +49,23 @@ provider:
 #    variable1: value1
 
 # you can add packaging information here
-#package:
-#  include:
-#    - include-me.py
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.py
-#    - exclude-me-dir/**
+package:
+  #  include:
+  #    - include-me.py
+  #    - include-me-dir/**
+  exclude:
+    - .venv/** # leave out virtual environment to reduce size of zip
+    - .vscode/** # leave out vscode settings to reduce size of zip
 
 functions:
-  hello:
-    handler: handler.hello
+  postUpdate:
+    handler: post_update.post_update
+    events:
+      - http:
+          path: postUpdate
+          method: post
+          cors: true # Needed to avoid error 502
+          integration: LAMBDA # Needed to avoid error 502
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -102,3 +111,9 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+plugins:
+  - serverless-python-requirements
+custom:
+  pythonRequirements:
+    zip: true
+    dockerizePip: non-linux # NOTE: You will need docker in order for this line to work
