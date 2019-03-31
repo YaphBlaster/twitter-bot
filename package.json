@@ -1,0 +1,28 @@
+{
+  "name": "twitter-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "npm run freeze && sls deploy -v --aws-profile hypemoji",
+    "kill": "sls remove -v --aws-profile hypemoji",
+    "freeze": "pip freeze > requirements.txt && cat requirements.txt",
+    "createEnv": "virtualenv --no-site-packages --distribute .venv  --python=python3 && source .venv/bin/activate && pip install -r requirements.txt",
+    "pippy": " pip install -r requirements.txt",
+    "postUpdate": "serverless invoke -f postUpdate --path postUpdateTest.json --log --aws-profile hypemoji"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YaphBlaster/twitter-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YaphBlaster/twitter-bot/issues"
+  },
+  "homepage": "https://github.com/YaphBlaster/twitter-bot#readme",
+  "devDependencies": {
+    "serverless-python-requirements": "^4.3.0"
+  }
+}
